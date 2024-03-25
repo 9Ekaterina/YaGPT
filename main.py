@@ -46,4 +46,6 @@ def ask_gpt(text):
 
 
 
-ask_gpt("напиши рассказ про котиков")
+prompt_gpt = input("Про что будем писать рассказ?")
+
+ask_gpt(prompt_gpt)
