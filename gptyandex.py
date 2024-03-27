@@ -1,9 +1,11 @@
 import requests
+from config import YATOKEN, FID
+
 
 # Выполняем запрос к YandexGPT
 def ask_gpt(text, sys_text, geo_text):
-    iam_token = 't1.9euelZqdjo-RmsebyJTJmpHGmMqVi-3rnpWaisbGnJaRxo6dx5aTy5mazJ3l8_dhOHRP-e8gSjcT_d3z9yFncU_57yBKNxP9zef1656VmpedjI7JmJ2alYmRnJScnpiX7_zF656VmpedjI7JmJ2alYmRnJScnpiXveuelZqRy4qenMePisyXksjJxs2Qy7XehpzRnJCSj4qLmtGLmdKckJKPioua0pKai56bnoue0oye.8FN1kGT8-QXnjSIJhwX1h3iPXrSNdKxVhwaKyiKGMSThIgKO-Q0cEhwyasQMuTkZslzRZ2s6U3pWLXmKDENwDQ'  # Токен для доступа к YandexGPT
-    folder_id = 'b1gfe8mbuq037jbemc92'  # Folder_id для доступа к YandexGPT
+    iam_token = f'{YATOKEN}'  # Токен для доступа к YandexGPT
+    folder_id = f'{FID}'  # Folder_id для доступа к YandexGPT
 
 
     headers = {
@@ -54,4 +56,40 @@ def ask_gpt(text, sys_text, geo_text):
             )
         )
 
+"""
+#Функция: подсчёт количества пользователей
+def is_limit_users():
+    cursor = con.cursor()
+    result = cursor.execute('SELECT DISTINCT user_id FROM prompts;')
+    count = 0  # количество пользователей
+    for i in result:  # считаем количество полученных строк
+        count += 1  # одна строка == один пользователь
+    con.close()
+    return count >= MAX_USERS
 
+#ОТЛАДКА: Лимит пользователей превышен?
+print(is_limit_users())
+
+
+#Функция: подсчёт количества токенов в тексте от пользоватея
+def count_tokens(text):
+    headers = {
+        'Authorization': f'Bearer {YATOKEN}',
+        'Content-Type': 'application/json'
+    }
+    data = {
+        "modelUri": f"gpt://{FID}/yandexgpt/latest",
+        "maxTokens": MAX_MODEL_TOKENS,
+        "text": text
+    }
+    return len(
+        requests.post(
+            "https://llm.api.cloud.yandex.net/foundationModels/v1/tokenize",
+            json=data,
+            headers=headers
+        ).json()['tokens']
+    )  # здесь, после выполнения запроса, функция возвращает количество токенов в text
+
+#ОТЛАДКА: сколько токенов в запросе пользователя
+print(count_tokens("сюда будем передавать запрос пользователя"))
+"""
