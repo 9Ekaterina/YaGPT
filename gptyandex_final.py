@@ -5,7 +5,7 @@ import sql_engine
 
 
 # Выполняем запрос к YandexGPT
-def ask_gpt(text, sys_text):
+def ask_gpt(text, sys_text, geo_text):
     iam_token = f'{YATOKEN}'  # Токен для доступа к YandexGPT
     folder_id = f'{FID}'  # Folder_id для доступа к YandexGPT
 
@@ -25,6 +25,11 @@ def ask_gpt(text, sys_text):
             {
                 "role": "system",
                 "text": sys_text
+            }
+            ,
+            {
+                "role": "assistant",
+                "text": geo_text
             }
             ,
             {

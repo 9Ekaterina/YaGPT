@@ -1,4 +1,3 @@
-# импорт библиотек
 import sqlite3
 import requests
 from datetime import datetime, date, time
@@ -115,24 +114,7 @@ def is_limit_users():
     for i in result:  # считаем количество полученных строк
         count += 1  # одна строка == один пользователь
     con.close()
-    return count > MAX_USERS
-
-def is_limit_users_count():
-    con = sqlite3.connect(DATABASE, check_same_thread=False)
-    cursor = con.cursor()
-    result = cursor.execute('SELECT DISTINCT user_id FROM prompts').fetchall()
-    #print("Вот сессия из базы:", result[1][0])
-    count = 0  # количество пользователей
-    for i in result:  # считаем количество полученных строк
-        count += 1  # одна строка == один пользователь
-    con.close()
-    return count
-
-def is_users_all():
-    con = sqlite3.connect(DATABASE, check_same_thread=False)
-    cursor = con.cursor()
-    result = cursor.execute('SELECT DISTINCT user_id FROM prompts').fetchall()
-    return result
+    return count >= MAX_USERS
 
 #ОТЛАДКА: Лимит пользователей превышен?
     print(is_limit_users())
@@ -145,53 +127,23 @@ def max_users_session(user_id_session):
 
     result = cursor.execute(query).fetchall()
     #ОТЛАДКА: печать максимального номера сессии пользователя
-    print(result)
     #print(result[0][0])
     con.close()
-
-
-    if result == []:
-        print("Результат пустой")
-        result = 0
-    else:
-        result = result[0][0]
+    result = result[0][0]
     return result
 
 # функция подсчета токенов
 def max_users_tocens(user_id_session):
     con = sqlite3.connect(DATABASE, check_same_thread=False)
     cursor = con.cursor()
-    query = f"SELECT DISTINCT tokens FROM  prompts where user_id = {user_id_session}  ORDER BY date DESC LIMIT 1"
+    query = f"SELECT DISTINCT tokens FROM  prompts where user_id = {user_id_session} ORDER BY date DESC LIMIT 1"
     tokens = cursor.execute(query).fetchall()
     #ОТЛАДКА: печать максимального номера сессии пользователя
-    print("Ответ от функции max_user_tocens : ",tokens[0][0])
+    #print(result[0][0])
     con.close()
-    #tokens = tokens[0][0]
-    if tokens == []:
-        print("Результат пустой")
-        tokens = 0
-    else:
-        tokens = tokens[0][0]
-
+    tokens = tokens[0][0]
     return tokens
 
-
-def max_users_tocens_session(user_id_session, user_session_in_base):
-    con = sqlite3.connect(DATABASE, check_same_thread=False)
-    cursor = con.cursor()
-    query = f"SELECT DISTINCT tokens FROM  prompts where user_id = {user_id_session} AND session_id = {user_session_in_base} ORDER BY date DESC LIMIT 1"
-    tokens = cursor.execute(query).fetchall()
-    #ОТЛАДКА: печать максимального номера сессии пользователя
-    #print("Ответ от функции max_user_tocens : ",tokens[0][0])
-    con.close()
-    #tokens = tokens[0][0]
-    if tokens == []:
-        print("Результат пустой")
-        tokens = 0
-    else:
-        tokens = tokens[0][0]
-
-    return tokens
 
 def  continue_responseya (user_id_session):
     con = sqlite3.connect(DATABASE, check_same_thread=False)
@@ -205,7 +157,7 @@ def select_data_prompts (user_id_session):
     con = sqlite3.connect(DATABASE, check_same_thread=False)
     cur = con.cursor()
     query = f'''
-                     SELECT content FROM prompts WHERE user_id ={user_id_session} and role = "assistant_prompt" ORDER BY date DESC LIMIT 1
+                     SELECT content FROM prompts WHERE user_id ={user_id_session} and role = "assistant_prompt" ORDER BY date LIMIT 1
                    '''
     result = cur.execute(query).fetchone()
     result = result[0]
@@ -304,4 +256,4 @@ def sql_select_data_prompts():
 
 #sql_select_data_prompts()
 
-#print(count_tokens(input("Подай мне сюда промпт:")))
+
